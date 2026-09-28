@@ -34,7 +34,7 @@
   --env-flap:   #F0897D;   /* the flap */
 }
 *{box-sizing:border-box}
-html{scroll-behavior:smooth}
+html{scroll-behavior:smooth;overflow-x:hidden}
 body{margin:0;background:var(--paper);color:var(--ink);
   font-family:'Work Sans',sans-serif;overflow-x:hidden}
 body.locked{height:100svh;overflow:hidden}
@@ -53,20 +53,20 @@ button{font-family:inherit}
 .entrance.finishing{opacity:0}
 
 .stage{perspective:1600px;display:flex;justify-content:center;width:100%}
-.env-scale{transform-origin:50% 62%;transform-style:preserve-3d;will-change:transform}
+.env-scale{transform-origin:50% 55%;transform-style:preserve-3d;will-change:transform}
 
 /* The envelope is a button: tapping anywhere on it opens the invitation. */
 .envelope{position:relative;display:block;padding:0;border:0;background:none;
   cursor:pointer;-webkit-tap-highlight-color:transparent;
-  width:min(82vw,46svh,400px);aspect-ratio:400/560;
+  width:min(84vw,38svh,380px);aspect-ratio:352/436;
   transform-style:preserve-3d;transition:transform .9s ease,opacity .7s ease}
 .envelope:focus-visible{outline:2px solid var(--ink);outline-offset:14px;border-radius:12px}
 .envelope .layer{position:absolute;inset:0;width:100%;height:100%;overflow:visible;pointer-events:none}
-.envelope .flap{transform-origin:50% 25%;transform:rotateX(0deg);backface-visibility:visible}
+.envelope .flap{transform-origin:50% 2.75%;transform:rotateX(0deg);backface-visibility:visible}
 .envelope .card-holder{position:absolute;inset:0;transform:translateY(0)}
 
 /* sticker seal */
-.seal{position:absolute;left:50%;top:68.6%;width:23%;aspect-ratio:1;
+.seal{position:absolute;left:50%;top:58.7%;width:26.1%;aspect-ratio:1;
   transform:translate(-50%,-50%);pointer-events:none;animation:sealPulse 2.4s ease-in-out infinite}
 .seal svg{position:relative;width:100%;height:100%;display:block;overflow:visible}
 @keyframes sealPulse{0%,100%{transform:translate(-50%,-50%) scale(1)}50%{transform:translate(-50%,-50%) scale(1.07)}}
@@ -91,7 +91,7 @@ button{font-family:inherit}
   49%{transform:translateZ(0) rotateX(-86deg)}
   50%{transform:translateZ(-70px) rotateX(-88deg)}
   100%{transform:translateZ(-70px) rotateX(-178deg)}}
-@keyframes cardRise{0%{transform:translateY(0)}100%{transform:translateY(-42%)}}
+@keyframes cardRise{0%{transform:translateY(0)}100%{transform:translateY(-54%)}}
 .entrance.finishing .envelope{transform:scale(1.45) translateY(-4%);opacity:0}
 
 /* ---- envelope SVG painting: flat coral paper, ink outlines, hard shadow ---- */
@@ -114,9 +114,9 @@ button{font-family:inherit}
 .seal-blob{fill:var(--butter);stroke:var(--ink);stroke-width:4}
 .seal-mark{fill:none;stroke:var(--ink);stroke-width:4;stroke-linejoin:round;stroke-linecap:round}
 
-@media(max-width:520px){.envelope{width:min(86vw,44svh,340px)}}
-@media(min-width:900px){.envelope{width:min(46svh,400px)}}
-@media(orientation:landscape) and (max-height:560px){.envelope{width:min(46vw,40svh,240px)}.caption{font-size:12px}}
+@media(max-width:520px){.envelope{width:min(84vw,38svh,340px)}}
+@media(min-width:900px){.envelope{width:min(38svh,380px)}}
+@media(orientation:landscape) and (max-height:560px){.envelope{width:min(40vw,32svh,240px)}.caption{font-size:12px}}
 
 /* confetti canvas sits above everything, ignores clicks */
 #confetti{position:fixed;inset:0;z-index:950;pointer-events:none}
@@ -244,7 +244,8 @@ p.lead{font-size:clamp(16px,2.4vw,18px);line-height:1.65;color:var(--ink-soft);
 .field input:focus,.field select:focus,.field textarea:focus{border-color:var(--coral-dark);
   box-shadow:0 0 0 3px rgba(232,119,107,.2)}
 .attend{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.attend input{position:absolute;opacity:0;pointer-events:none}
+.attend{position:relative}
+.attend input{position:absolute;opacity:0;pointer-events:none;width:1px;height:1px;left:0;top:0}
 .attend label{margin:0;border:2px solid var(--ink);padding:13px;border-radius:12px;text-align:center;
   font-size:13px;font-weight:600;cursor:pointer;background:var(--paper)}
 .attend input:checked+label.yes{background:var(--sage);color:#fff}
@@ -328,7 +329,7 @@ p.lead{font-size:clamp(16px,2.4vw,18px);line-height:1.65;color:var(--ink-soft);
     <div class="env-scale">
     <button class="envelope" id="envelope" aria-label="Tap to open the invitation">
 
-      <svg class="layer" viewBox="0 0 400 560" aria-hidden="true">
+      <svg class="layer" viewBox="24 128 352 436" aria-hidden="true">
         <defs>
           <path id="leaf" d="M0 0C7 -6 17 -7 25 -2C17 5 7 6 0 0Z"/>
         </defs>
@@ -339,7 +340,7 @@ p.lead{font-size:clamp(16px,2.4vw,18px);line-height:1.65;color:var(--ink-soft);
 
       <!-- the invitation card, tucked inside until the flap opens -->
       <div class="card-holder">
-        <svg class="layer" viewBox="0 0 400 560" aria-hidden="true">
+        <svg class="layer" viewBox="24 128 352 436" aria-hidden="true">
           <rect class="env-card-paper" x="62" y="166" width="276" height="352" rx="5"/>
           <rect class="env-card-border" x="74" y="178" width="252" height="328" rx="3"/>
           <text class="card-name" id="cardName" x="200" y="254" text-anchor="middle" font-size="38"></text>
@@ -359,7 +360,7 @@ p.lead{font-size:clamp(16px,2.4vw,18px);line-height:1.65;color:var(--ink-soft);
       </div>
 
       <!-- front face of the envelope: the pocket the card sits in -->
-      <svg class="layer" viewBox="0 0 400 560" aria-hidden="true">
+      <svg class="layer" viewBox="24 128 352 436" aria-hidden="true">
         <rect class="env-front" x="40" y="140" width="320" height="405" rx="9"/>
         <g class="env-print" opacity=".9" transform="translate(200,498)">
           <path class="env-print-stroke" d="M-30 2C-14 -6 12 -8 30 -3"/>
@@ -373,7 +374,7 @@ p.lead{font-size:clamp(16px,2.4vw,18px);line-height:1.65;color:var(--ink-soft);
       </svg>
 
       <!-- the flap, hinged along the top edge of the envelope -->
-      <svg class="layer flap" viewBox="0 0 400 560" aria-hidden="true">
+      <svg class="layer flap" viewBox="24 128 352 436" aria-hidden="true">
         <path class="env-flap-paper" d="M40 150 Q40 140 50 140 L350 140 Q360 140 360 150 L206 384 Q200 392 194 384 Z"/>
         <text class="env-mono" id="monogram" x="200" y="243" text-anchor="middle" font-size="68"></text>
       </svg>
