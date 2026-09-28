@@ -315,6 +315,14 @@ p.lead{font-size:clamp(16px,2.4vw,18px);line-height:1.65;color:var(--ink-soft);
 @media (prefers-reduced-motion:reduce){
   *{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
 }
+/* ---------- background music button ---------- */
+.music-btn{position:fixed;right:16px;bottom:16px;z-index:960;width:46px;height:46px;
+  border-radius:50%;border:2.5px solid var(--ink);background:var(--butter);color:var(--ink);
+  font-size:20px;line-height:1;cursor:pointer;box-shadow:3px 3px 0 var(--ink);
+  display:flex;align-items:center;justify-content:center;padding:0}
+.music-btn.off{background:var(--card)}
+.music-btn.off::after{content:"";position:absolute;width:30px;height:2.5px;
+  background:var(--ink);transform:rotate(-45deg)}
 </style>
 </head>
 <body class="locked">
@@ -582,6 +590,10 @@ p.lead{font-size:clamp(16px,2.4vw,18px);line-height:1.65;color:var(--ink-soft);
   </div>
 </div>
 
+<audio id="bgm" src="src/audio.mpeg" loop preload="auto"></audio>
+<button id="musicBtn" class="music-btn off hide" type="button"
+        aria-label="Music on or off" aria-pressed="false">&#9834;</button>
+
 <script>
 /* ==========================================================================
    2 · PARTY SETTINGS — CHANGE THE NAME, DATE, TIME AND PLACE HERE
@@ -600,8 +612,8 @@ const PARTY = {
   countdownOver: "The day is here",
 
   venueName:     "Home",
-  venueAddress:  "Kuchchaveli",
-  venueLine:     "Kuchchaveli",
+  venueAddress:  "Kuchaveli",
+  venueLine:     "Kuchaveli",
   mapsQuery:     "8.823365, 81.095251",
 
   coverSubtitle: "Birthday Celebration Invite",
@@ -683,6 +695,30 @@ function animConfetti(){
   if (particles.length) requestAnimationFrame(animConfetti); else rafOn = false;
 }
 
+/* ---------- background music (src/audio.mpeg, loops until the guest leaves) ---------- */
+const bgm = $('bgm'), musicBtn = $('musicBtn');
+bgm.volume = 0.5;                 // 0 (silent) to 1 (full)
+let musicOn = false;
+
+function setMusic(on) {
+  musicOn = on;
+  musicBtn.classList.toggle('off', !on);
+  musicBtn.setAttribute('aria-pressed', String(on));
+  if (on) bgm.play().catch(() => setMusic(false));
+  else bgm.pause();
+}
+function startMusic() {
+  musicBtn.classList.remove('hide');
+  setMusic(true);
+}
+musicBtn.addEventListener('click', () => setMusic(!musicOn));
+
+// pause when the guest switches tabs or apps, resume when they come back
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden) bgm.pause();
+  else if (musicOn) bgm.play().catch(() => {});
+});
+
 /* ---------- opening the envelope ---------- */
 const entrance = $('entrance');
 const envelope = $('envelope');
@@ -700,6 +736,7 @@ function revealPage(instant) {
 function openEnvelope() {
   if (isOpening) return;
   isOpening = true;
+  startMusic();
   try { if (PARTY.showEnvelopeOnce) sessionStorage.setItem('inv-opened', '1'); } catch (e) {}
   if (reduceMotion) { revealPage(true); return; }
   envelope.classList.add('opening');
@@ -712,7 +749,11 @@ envelope.addEventListener('click', openEnvelope);
 
 let alreadySeen = false;
 try { alreadySeen = PARTY.showEnvelopeOnce && sessionStorage.getItem('inv-opened') === '1'; } catch (e) {}
-if (alreadySeen) { entrance.classList.add('hide'); document.body.classList.remove('locked'); }
+if (alreadySeen) {
+  entrance.classList.add('hide');
+  document.body.classList.remove('locked');
+  musicBtn.classList.remove('hide');   // button shows; music starts when they tap it
+}
 
 /* ---------- live countdown ---------- */
 const startTime = new Date(PARTY.startsAt).getTime();
@@ -909,6 +950,7 @@ function route(){
   $('site').style.display = isAdmin ? 'none' : '';
   $('admin').classList.toggle('active', isAdmin);
   if (isAdmin) {
+    bgm.pause();
     document.body.classList.remove('locked');
     entrance.classList.add('hide');
     const key = sessionKey();
