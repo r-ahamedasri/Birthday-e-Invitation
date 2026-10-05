@@ -590,7 +590,7 @@ p.lead{font-size:clamp(16px,2.4vw,18px);line-height:1.65;color:var(--ink-soft);
   </div>
 </div>
 
-<audio id="bgm" src="src/audio.mpeg" loop preload="auto"></audio>
+<audio id="bgm" src="src/audio.mp3" loop preload="auto"></audio>
 <button id="musicBtn" class="music-btn off hide" type="button"
         aria-label="Music on or off" aria-pressed="false">&#9834;</button>
 
@@ -695,7 +695,7 @@ function animConfetti(){
   if (particles.length) requestAnimationFrame(animConfetti); else rafOn = false;
 }
 
-/* ---------- background music (src/audio.mpeg, loops until the guest leaves) ---------- */
+/* ---------- background music (src/audio.mp3, loops until the guest leaves) ---------- */
 const bgm = $('bgm'), musicBtn = $('musicBtn');
 bgm.volume = 0.5;                 // 0 (silent) to 1 (full)
 let musicOn = false;
